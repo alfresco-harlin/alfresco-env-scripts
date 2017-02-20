@@ -12,7 +12,7 @@ rm -rf $backupdir
 dbbackupdir=backups/db/$ts
 mkdir $dbbackupdir
 
-mysqldump -u alfresco -palfresco -h dbserver1 alf5_1_2 > $dbbackupdir/alf5_1_2.sql 
+mysqldump -u alfresco -palfresco -h dbserver1 $(cat dbenv) > $dbbackupdir/$(cat dbenv).sql 
 
 tar cvzf $dbbackupdir-db.tgz $dbbackupdir
 rm -rf $dbbackupdir
