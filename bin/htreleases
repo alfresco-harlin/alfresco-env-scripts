@@ -1,3 +1,5 @@
 #!/usr/bin/env bash
 
+/usr/sbin/vpnc-connect maidenhead
 lynx http://releases.alfresco.com
+/usr/sbin/vpnc-disconnect
