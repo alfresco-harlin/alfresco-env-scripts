@@ -1,0 +1,27 @@
+#!/usr/bin/env bash
+
+ts=$(date +"%d%h%Y")
+
+backupdir=backups/contentstore/$ts
+mkdir $backupdir
+
+cp -rfv alf_data/contentstore/* $backupdir/.
+tar cvzf $backupdir-content.tgz $backupdir
+rm -rf $backupdir 
+
+dbbackupdir=backups/db/$ts
+mkdir $dbbackupdir
+
+mysqldump -u alfresco -palfresco -h dbserver1 alf5_1_2 > $dbbackupdir/alf5_1_2.sql 
+
+tar cvzf $dbbackupdir-db.tgz $dbbackupdir
+rm -rf $dbbackupdir
+
+repobackupdir=backups/repo/$ts
+mkdir $repobackupdir
+
+mv $backupdir-content.tgz $repobackupdir/.
+mv $dbbackupdir-db.tgz $repobackupdir/.
+
+tar cvzf $repobackupdir.tgz $repobackupdir
+rm -rf $repobackupdir

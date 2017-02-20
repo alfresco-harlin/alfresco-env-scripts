@@ -1,0 +1,13 @@
+#!/usr/bin/env bash
+
+echo "
+Scripts:
+    backupalf - Makes a backup of the contentstore and database into backups directory in Alfresco install
+    clear_solr1 - Clears Solr 1.4 indexes
+    clear_solr4 - Clears Solr 4 indexes
+    htrelease - Opens browser to Alfresco releases (must be connected to internal VPN)
+    mountcifs - Mounts local running Alfresco install to local mount point (CIFS)
+    setauth - Sets authentication chain to a particular type for testing
+    startalf - Starts up Alfresco installed in current directory
+    stopalf - Stops running Alfresco
+"
