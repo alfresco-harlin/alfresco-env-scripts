@@ -1,0 +1,7 @@
+#!/usr/bin/env bash
+
+rm -rfv alf_data/solr/workspace/SpacesStore/*
+rm -rfv alf_data/solr/archive/SpacesStore/*
+
+rm -rfv alf_data/solr/workspace-SpacesStore/alfrescoModels/*
+rm -rfv alf_data/solr/archive-SpacesStore/alfrescoModels/*

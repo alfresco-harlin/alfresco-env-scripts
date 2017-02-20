@@ -1,0 +1,132 @@
+#!/usr/bin/env bash
+
+classdir="tomcat/shared/classes"
+extensiondir="alfresco/web-extension"
+globalpropertiesfile="alfresco-global.properties"
+shareconfigcustomfile="share-config-custom.xml"
+
+clear; reset;
+
+opt=$1
+
+function show_usage {
+	echo "Description:"
+	echo "Sets the authentication type for the current version of Alfresco."
+	echo "Usage:"
+	echo "setauth.sh [ntlm|orig|ldap-ad|kerberos|passthru]"
+	echo
+	exit 1;
+}
+
+function show_wrong_dir_error {
+	echo "ERROR!!!"
+	echo "Invalid Alfresco installation directory"
+	echo "Tomcat does not appear to be installed here."
+	echo
+	exit 1;
+}
+
+if [ "$opt" == "" ]
+then
+	show_usage;
+fi
+
+if [ ! -d "$classdir" ]
+then
+	show_wrong_dir_error;
+fi
+
+extension=$opt
+shareconfigflag=0
+
+case $opt in
+
+	ntlm)
+		extension="orig"
+		;;
+
+	orig)
+		extension="orig"
+		;;
+
+	ldap-ad)
+		extension="ldap-ad"
+		infomsg="Ensure you have your AD server is turned on."
+		;;
+
+	kerberos)
+		extension="kerberos"
+		infomsg="Ensure you have your AD server is turned on."
+		infomsg="$infomsg\nNote that share-config-custom.xml will be modified also"
+		shareconfigflag=1
+		;;
+
+	passthru)
+		extension="passthru"
+		infomsg="Ensure you have your AD server turned on."
+		infomsg="$infomsg\nNote that share-config-custom.xml will be modified also"
+		shareconfigflag=1
+		;;
+
+	*)
+		echo "ERROR: Invalid option! See usage below:"
+		echo
+		show_usage;
+esac
+
+echo
+echo "Authentication type is: $opt"
+
+sourcefile="$classdir/$globalpropertiesfile.$extension"
+targetfile="$classdir/$globalpropertiesfile"
+
+if [ ! -f "$sourcefile" ]
+then
+	echo "Missing file: $sourcefile"
+	show_wrong_dir_error;
+fi
+
+if [ ! -f "$targetfile" ]
+then
+	echo "Missing file: $targetfile"
+	show_wrong_dir_error;
+fi
+
+orig_share_file="$classdir/$extensiondir/$shareconfigcustomfile.orig"
+share_targetfile="$classdir/$extensiondir/$shareconfigcustomfile"
+
+echo
+echo "Resetting share-config-custom file."
+echo "Copying $orig_share_file to $share_targetfile"
+sudo cp $orig_share_file $share_targetfile
+
+echo
+echo "Resetting alfresco-global.properties."
+echo "Copying $classdir/$globalpropertiesfile.orig $targetfile"
+sudo cp $classdir/$globalpropertiesfile.orig $targetfile
+
+echo
+echo "Setting alfresco-global.properties"
+echo "Copying $sourcefile to $targetfile"
+if [ "$extension" == "orig" ]
+then
+	sudo bash -c "cp $sourcefile $targetfile"
+else
+	sudo bash -c "cat $sourcefile >> $targetfile"
+fi
+
+if [ "$shareconfigflag" == 1 ]
+then
+	echo
+	echo "Changing share-config-custom.xml files for SSO usage."
+	
+	share_sourcefile="$classdir/$extensiondir/$shareconfigcustomfile.$extension"
+	
+	echo "Copying $share_sourcefile to $share_targetfile"
+	sudo cp $share_sourcefile $share_targetfile
+fi
+
+echo
+printf "$infomsg\n"
+echo "Done."
+echo "***********************************************************"

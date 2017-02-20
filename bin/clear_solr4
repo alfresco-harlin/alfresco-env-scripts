@@ -1,0 +1,7 @@
+#!/usr/bin/env bash
+
+rm -rfv alf_data/solr4/index/workspace/SpacesStore/*
+rm -rfv alf_data/solr4/index/archive/SpacesStore/*
+
+rm -rfv alf_data/solr4/model/*
+rm -rfv alf_data/solr4/content/*

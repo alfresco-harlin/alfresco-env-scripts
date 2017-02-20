@@ -1,0 +1,18 @@
+#!/usr/bin/env bash
+
+ssh -i ~/.ssh/harlin-aws-support.pem ubuntu@dbserver1 'sudo service mysql restart'
+
+./backupalf.sh
+
+rm -rf *.log*
+rm -rf tomcat/logs/*
+
+rm -rf tomcat/temp/*
+rm -rf tomcat/work/*
+
+./alfresco.sh start
+
+tail -f tomcat/logs/catalina.out &
+
+sleep 180
+/root/bin/mountcifs

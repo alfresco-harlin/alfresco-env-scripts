@@ -1,0 +1,4 @@
+#!/usr/bin/env bash
+
+mount -t cifs -o username=admin,password=admin //localhost/alfresco /mnt/alfresco_cifs
+
